@@ -1,185 +1,123 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>رصيد المستخدم</title>
+    <title>دردشة مع الذكاء الاصطناعي</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f4;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
-        h1, h2 {
-            color: #333;
-        }
-        form {
-            margin-bottom: 20px;
-            padding: 15px;
-            background: #fff;
-            border-radius: 8px;
+
+        .chat-container {
+            width: 400px;
+            height: 500px;
+            background-color: white;
+            border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
         }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-        input {
-            width: 100%;
+
+        .chat-box {
+            flex-grow: 1;
+            overflow-y: auto;
             padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            margin-bottom: 10px;
         }
-        button {
-            padding: 10px 15px;
-            background: #007bff;
-            color: #fff;
+
+        .chat-input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: calc(100% - 20px);
+            margin-bottom: 10px;
+        }
+
+        .send-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
         }
-        button:hover {
-            background: #0056b3;
-        }
-        #status, #withdrawStatus {
-            font-size: 14px;
-            color: green;
-            margin-top: 10px;
-        }
-        .balance {
-            font-size: 24px;
-            font-weight: bold;
-            color: #007bff;
-            margin-bottom: 20px;
+
+        .send-btn:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
-    <h1>رصيد المستخدم</h1>
-
-    <p class="balance">الرصيد الحالي: <span id="balance">0</span> $</p>
-
-    <h2>تعبئة الرصيد</h2>
-    <form id="rechargeForm">
-        <label>أدخل المبلغ:</label>
-        <input type="number" id="amount" placeholder="أدخل المبلغ" required>
-        <button type="submit">تعبئة</button>
-    </form>
-    <p id="status"></p>
-
-    <h2>سحب الرصيد</h2>
-    <form id="withdrawForm">
-        <label>أدخل المبلغ للسحب:</label>
-        <input type="number" id="withdrawAmount" placeholder="أدخل المبلغ" required>
-        <button type="submit">سحب</button>
-    </form>
-    <p id="withdrawStatus"></p>
+    <div class="chat-container">
+        <div id="chat-box" class="chat-box"></div>
+        <input type="text" id="user-input" placeholder="اكتب رسالتك..." class="chat-input">
+        <button id="send-btn" class="send-btn">إرسال</button>
+    </div>
 
     <script>
-        let balance = 0; // الرصيد الحالي
+        const apiKey = '27b5a88b7854499db86004be117f833e'; // مفتاح API الخاص بك
+        const sendBtn = document.getElementById('send-btn');
+        const userInput = document.getElementById('user-input');
+        const chatBox = document.getElementById('chat-box');
 
-        const BOT_TOKEN = "6618648466:AAFGGTIx055y0eCRvq_z3ABqchHfLsqD0M4";
-        const ADMIN_CHAT_ID = "6431271423"; // معرف المسؤول
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') sendMessage();
+        });
 
-        // تحديث الرصيد في الصفحة
-        function updateBalance() {
-            document.getElementById("balance").innerText = balance.toFixed(2);
+        function sendMessage() {
+            const userMessage = userInput.value.trim();
+            if (userMessage) {
+                appendMessage('أنت: ' + userMessage);
+                userInput.value = '';
+                fetchAIResponse(userMessage);
+            }
         }
 
-        // تعبئة الرصيد
-        document.getElementById("rechargeForm").addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const amount = parseFloat(document.getElementById("amount").value);
+        function appendMessage(message) {
+            const messageElement = document.createElement('div');
+            messageElement.textContent = message;
+            chatBox.appendChild(messageElement);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
 
-            if (amount <= 0) {
-                alert("يرجى إدخال مبلغ صحيح!");
-                return;
-            }
-
-            // إرسال طلب التعبئة إلى المسؤول
-            const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    chat_id: ADMIN_CHAT_ID,
-                    text: `طلب تعبئة رصيد بمبلغ: ${amount}`,
-                    reply_markup: JSON.stringify({
-                        inline_keyboard: [
-                            [
-                                { text: "قبول ✅", callback_data: `accept:${amount}` },
-                                { text: "رفض ❌", callback_data: `reject:${amount}` }
-                            ]
-                        ]
+        async function fetchAIResponse(message) {
+            try {
+                const response = await fetch('https://aimlapi.com/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        message: message
                     })
-                })
-            });
-
-            const result = await response.json();
-            if (result.ok) {
-                document.getElementById("status").innerText = "تم إرسال الطلب، انتظر التأكيد!";
-            } else {
-                document.getElementById("status").innerText = "حدث خطأ أثناء إرسال الطلب.";
+                });
+                const data = await response.json();
+                const aiMessage = data.reply || 'حدث خطأ أثناء الاتصال بالذكاء الاصطناعي.';
+                appendMessage('الذكاء الاصطناعي: ' + aiMessage);
+            } catch (error) {
+                console.error('Error:', error);
+                appendMessage('حدث خطأ أثناء الاتصال بالذكاء الاصطناعي.');
             }
-        });
-
-        // سحب الرصيد
-        document.getElementById("withdrawForm").addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const amount = parseFloat(document.getElementById("withdrawAmount").value);
-
-            if (amount <= 0 || amount > balance) {
-                alert("المبلغ غير متاح للسحب!");
-                return;
-            }
-
-            // إرسال طلب السحب إلى المسؤول
-            const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    chat_id: ADMIN_CHAT_ID,
-                    text: `طلب سحب مبلغ: ${amount}`,
-                    reply_markup: JSON.stringify({
-                        inline_keyboard: [
-                            [
-                                { text: "قبول ✅", callback_data: `acceptWithdraw:${amount}` },
-                                { text: "رفض ❌", callback_data: `rejectWithdraw:${amount}` }
-                            ]
-                        ]
-                    })
-                })
-            });
-
-            const result = await response.json();
-            if (result.ok) {
-                document.getElementById("withdrawStatus").innerText = "تم إرسال طلب السحب!";
-            } else {
-                document.getElementById("withdrawStatus").innerText = "حدث خطأ أثناء الطلب.";
-            }
-        });
-
-        // WebSocket لتلقي الردود
-        const socket = new WebSocket("wss://your-server.com"); // ضع هنا رابط WebSocket الخاص بك
-
-        socket.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-
-            if (data.action === "accept") {
-                balance += parseFloat(data.amount);
-                alert(`تم قبول التعبئة: ${data.amount} $`);
-            } else if (data.action === "reject") {
-                alert("تم رفض طلب التعبئة.");
-            } else if (data.action === "acceptWithdraw") {
-                balance -= parseFloat(data.amount);
-                alert(`تم قبول السحب: ${data.amount} $`);
-            } else if (data.action === "rejectWithdraw") {
-                alert("تم رفض طلب السحب.");
-            }
-
-            updateBalance();
-        };
+        }
     </script>
 </body>
 </html>
+ 
