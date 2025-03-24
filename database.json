@@ -1,0 +1,12 @@
+{
+    "users": [
+        {
+            "identifier": "user@example.com",
+            "password": "pass123"
+        },
+        {
+            "identifier": "123456789",
+            "password": "pass456"
+        }
+    ]
+}
