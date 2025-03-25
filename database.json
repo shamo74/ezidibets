@@ -1,13 +1,14 @@
 {
     "users": [
         {
-            "identifier": "user@example.com",
-            "password": "pass123"
+            "identifier": "Shamo",
+            "password": "Shamo123"
+            "link": "https://ezidicode.com"
         },
         {
-            "identifier": "123456789",
-            "password": "pass456",
-            "link": "https://www.ezidicode.com"
+            "identifier": "Shamo1",
+            "password": "Shamo1234",
+            "link": "https://shamo74.github.io/ezidibets/index.html"
         }
     ]
 }
