@@ -1,0 +1,28 @@
+{
+    "user": {
+        "username": "خلف",
+        "balance": 0
+    },
+    "matches": [
+        {
+            "league": "la-liga",
+            "team1": "ريال مدريد",
+            "team2": "برشلونة",
+            "time": "شوط الاول",
+            "odds": [1.75, 3.20, 2.95],
+            "details": "الكلاسيكو: مباراة قوية متوقعة",
+            "betAmount": 100,
+            "profitPoints": 715
+        },
+        {
+            "league": "premier-league",
+            "team1": "مانشستر سيتي",
+            "team2": "ليفربول",
+            "time": "غدًا - 18:30 بتوقيت مكة",
+            "odds": [2.10, 3.50, 2.80],
+            "details": "صراع على الصدارة",
+            "betAmount": 150,
+            "profitPoints": 110
+        }
+    ]
+}
