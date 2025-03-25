@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد مراهنات كرة القدم</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #e0e0e0;
+            padding-top: 20px;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            right: -320px;
+            width: 320px;
+            height: 100%;
+            background: #2a2a4a;
+            padding: 20px;
+            box-shadow: -5px 0 20px rgba(0, 0, 0, 0.3);
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .navbar.active {
+            right: 0;
+        }
+
+        .nav-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #00d4ff, #00b4d8);
+            color: #fff;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4);
+            transition: all 0.3s ease, opacity 0.2s;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.5);
+            background: linear-gradient(45deg, #00b4d8, #00d4ff);
+        }
+
+        .nav-toggle::before {
+            content: '≡';
+            font-size: 24px;
+        }
+
+        .nav-toggle.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .close-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ff8787);
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .close-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5);
+        }
+
+        .user-info {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .user-info p {
+            font-size: 18px;
+            font-weight: 600;
+            color: #00d4ff;
+            margin-bottom: 5px;
+        }
+
+        .user-info span {
+            font-size: 16px;
+            color: #e0e0e0;
+        }
+
+        .dropdown-content a {
+            color: #e0e0e0;
+            padding: 14px 20px;
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin: 5px 0;
+        }
+
+        .dropdown-content a:hover {
+            background: #3a3a6a;
+            color: #00d4ff;
+            transform: translateX(-5px);
+        }
+
+        .logout {
+            background: linear-gradient(45deg, #ff6b6b, #ff8787);
+            color: #fff;
+            padding: 12px;
+            text-align: center;
+            border-radius: 8px;
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .logout:hover {
+            background: linear-gradient(45deg, #ff8787, #ff6b6b);
+            transform: scale(1.02);
+        }
+
+        .dashboard {
+            background: #2a2a4a;
+            border-radius: 20px;
+            padding: 25px;
+            width: 90%;
+            max-width: 1300px;
+            margin: 30px auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            width: 140px;
+            height: auto;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
+        }
+
+        .logo:hover {
+            transform: scale(1.1);
+        }
+
+        h1 {
+            color: #fff;
+            font-size: 36px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .matches-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .match-card {
+            background: #3a3a6a;
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .match-card:hover {
+            transform: translateY(-8px);
+            background: #4a4a8a;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .match-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shine 2.5s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        .teams {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        .team {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+
+        .team img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .match-time {
+            color: #00d4ff;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .match-details {
+            color: #e0e0e0;
+            font-size: 14px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .odds {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .odd-btn {
+            flex: 1;
+            padding: 12px;
+            background: linear-gradient(45deg, #00d4ff, #00b4d8);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .odd-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4);
+            background: linear-gradient(45deg, #00b4d8, #00d4ff);
+        }
+
+        .bet-slip {
+            background: #3a3a6a;
+            padding: 25px;
+            border-radius: 15px;
+            color: #fff;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .bet-slip h3 {
+            margin-bottom: 20px;
+            color: #00d4ff;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .bet-input {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 15px;
+            background: #4a4a8a;
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .bet-input:focus {
+            outline: none;
+            background: #5a5aaa;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+        }
+
+        .bet-details {
+            background: #4a4a8a;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .bet-details p {
+            margin: 8px 0;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .place-bet {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(45deg, #ff6b6b, #ff8787);
+            border: none;
+            border-radius: 30px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .place-bet:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.5);
+            background: linear-gradient(45deg, #ff8787, #ff6b6b);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: #00d4ff;
+            color: #fff;
+            border-radius: 10px;
+            display: none;
+            animation: slideIn 0.5s ease;
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4);
+        }
+
+        @keyframes slideIn {
+            from { right: -100%; }
+            to { right: 20px; }
+        }
+
+        .results {
+            display: none;
+            background: #3a3a6a;
+            padding: 20px;
+            border-radius: 15px;
+            color: #fff;
+            margin-top: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .results h3 {
+            color: #00d4ff;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <button class="nav-toggle" id="nav-toggle">الدوريات</button>
+    <div class="navbar" id="navbar">
+        <div>
+            <div class="user-info">
+                <p id="username"></p>
+                <span id="balance"></span>
+            </div>
+            <button class="close-btn" id="close-nav">إغلاق</button>
+            <div class="dropdown-content">
+                <a href="#" data-league="la-liga">الدوري الإسباني</a>
+                <a href="#" data-league="premier-league">الدوري الإنجليزي</a>
+                <a href="#" data-league="all">جميع الدوريات</a>
+            </div>
+        </div>
+        <a href="#" class="logout" id="logout">تسجيل الخروج</a>
+    </div>
+
+    <div class="dashboard">
+        <div class="header">
+            <img src="https://via.placeholder.com/140" alt="Logo" class="logo">
+            <h1>مراهنات كرة القدم</h1>
+        </div>
+
+        <div class="matches-container" id="matches-container">
+            <!-- Matches will be populated via JavaScript -->
+        </div>
+
+        <div class="results" id="results">
+            <h3>نتائج المباريات</h3>
+            <p id="results-text"></p>
+        </div>
+
+        <div class="bet-slip">
+            <h3>قسيمة الرهان</h3>
+            <div class="bet-details">
+                <p id="selected-bet">اختر الرهانات الخاصة بك</p>
+                <input type="number" class="bet-input" id="bet-amount" placeholder="أدخل مبلغ الرهان $" min="1">
+                <div class="bet-details">
+                    <p id="potential-profit">الربح المحتمل: $0</p>
+                    <p id="total-amount">المبلغ الكلي: $0</p>
+                </div>
+            </div>
+            <button class="place-bet" id="place-bet-btn">وضع الرهان</button>
+        </div>
+    </div>
+
+    <div class="notification" id="notification">تم إرسال الرهان إلى تليجرام!</div>
+
+    <script>
+        const TELEGRAM_BOT_TOKEN = '6618648466:AAFGGTIx055y0eCRvq_z3ABqchHfLsqD0M4';
+        const TELEGRAM_CHAT_ID = '6431271423';
+        const DATA_URL = 'databo.json'; // Replace with your actual URL
+
+        const betSlip = document.querySelector('#selected-bet');
+        const betAmountInput = document.querySelector('#bet-amount');
+        const potentialProfit = document.querySelector('#potential-profit');
+        const totalAmount = document.querySelector('#total-amount');
+        const placeBetBtn = document.querySelector('#place-bet-btn');
+        const notification = document.querySelector('#notification');
+        const leagueLinks = document.querySelectorAll('.dropdown-content a');
+        const matchesContainer = document.querySelector('#matches-container');
+        const results = document.querySelector('#results');
+        const resultsText = document.querySelector('#results-text');
+        const navToggle = document.querySelector('#nav-toggle');
+        const navbar = document.querySelector('#navbar');
+        const closeNav = document.querySelector('#close-nav');
+        const logout = document.querySelector('#logout');
+        const usernameDisplay = document.querySelector('#username');
+        const balanceDisplay = document.querySelector('#balance');
+
+        let selectedOdd = 0;
+        let selectedTeam1 = '';
+        let selectedTeam2 = '';
+        let userBalance = 0;
+        let databo = {};
+
+        // Load data from external JSON URL
+        function loadData() {
+            fetch(DATA_URL)
+                .then(response => {
+                    if (!response.ok) throw new Error('فشل في تحميل البيانات');
+                    return response.json();
+                })
+                .then(data => {
+                    databo = data;
+                    // Load user info
+                    usernameDisplay.textContent = databo.user.username;
+                    balanceDisplay.textContent = `الرصيد: $${databo.user.balance}`;
+                    userBalance = databo.user.balance;
+
+                    // Load matches
+                    matchesContainer.innerHTML = '';
+                    databo.matches.forEach(match => {
+                        const matchCard = document.createElement('div');
+                        matchCard.classList.add('match-card');
+                        matchCard.dataset.league = match.league;
+                        matchCard.dataset.team1 = match.team1;
+                        matchCard.dataset.team2 = match.team2;
+                        matchCard.innerHTML = `
+                            <div class="match-time">${match.time}</div>
+                            <div class="teams">
+                                <div class="team">
+                                    <img src="https://via.placeholder.com/45" alt="Team 1">
+                                    <span>${match.team1}</span>
+                                </div>
+                                <span>VS</span>
+                                <div class="team">
+                                    <span>${match.team2}</span>
+                                    <img src="https://via.placeholder.com/45" alt="Team 2">
+                                </div>
+                            </div>
+                            <div class="match-details">${match.details} - مبلغ الرهان: $${match.betAmount} - نقاط الربح: ${match.profitPoints}</div>
+                            <div class="odds">
+                                ${match.odds.map(odd => `<button class="odd-btn" data-odd="${odd}">${odd}</button>`).join('')}
+                            </div>
+                        `;
+                        matchesContainer.appendChild(matchCard);
+                    });
+
+                    // Reattach event listeners to new odd buttons
+                    document.querySelectorAll('.odd-btn').forEach(button => {
+                        button.addEventListener('click', () => {
+                            button.style.background = 'linear-gradient(45deg, #ff6b6b, #ff8787)';
+                            selectedOdd = parseFloat(button.dataset.odd);
+                            selectedTeam1 = button.closest('.match-card').dataset.team1;
+                            selectedTeam2 = button.closest('.match-card').dataset.team2;
+                            betSlip.textContent = `رهان: ${selectedTeam1} vs ${selectedTeam2} - ${selectedOdd}`;
+                            calculateProfit();
+                            setTimeout(() => {
+                                button.style.background = 'linear-gradient(45deg, #00d4ff, #00b4d8)';
+                            }, 300);
+                        });
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading JSON:', error);
+                    alert('حدث خطأ أثناء تحميل البيانات!');
+                });
+        }
+
+        // Toggle Navbar
+        navToggle.addEventListener('click', () => {
+            navbar.classList.add('active');
+            navToggle.classList.add('hidden');
+        });
+
+        closeNav.addEventListener('click', () => {
+            navbar.classList.remove('active');
+            navToggle.classList.remove('hidden');
+        });
+
+        logout.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = 'index.html'; // Redirect to index.html
+        });
+
+        // Show Results and Filter Matches
+        leagueLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const league = link.dataset.league;
+                const matchCards = document.querySelectorAll('.match-card');
+
+                matchCards.forEach(card => {
+                    if (league === 'all' || card.dataset.league === league) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                results.style.display = 'block';
+                resultsText.textContent = league === 'la-liga' 
+                    ? 'ريال مدريد 2 - 1 برشلونة (الأسبوع الماضي)'
+                    : league === 'premier-league' 
+                    ? 'مانشستر سيتي 3 - 2 ليفربول (الأسبوع الماضي)'
+                    : 'جميع النتائج متاحة هنا';
+            });
+        });
+
+        // Real-time Bet Calculation
+        betAmountInput.addEventListener('input', calculateProfit);
+
+        function calculateProfit() {
+            const amount = parseFloat(betAmountInput.value) || 0;
+            const profit = amount * selectedOdd;
+            potentialProfit.textContent = `الربح المحتمل: $${(profit - amount).toFixed(2)}`;
+            totalAmount.textContent = `المبلغ الكلي: $${profit.toFixed(2)}`;
+        }
+
+        placeBetBtn.addEventListener('click', () => {
+            if (!selectedOdd || !betAmountInput.value) {
+                alert('يرجى اختيار رهان وإدخال مبلغ!');
+                return;
+            }
+
+            const betAmount = parseFloat(betAmountInput.value);
+            if (betAmount > userBalance) {
+                alert('رصيدك غير كافٍ لهذا الرهان!');
+                return;
+            }
+
+            const betDetails = {
+                team1: selectedTeam1,
+                team2: selectedTeam2,
+                odd: selectedOdd,
+                amount: betAmount,
+                profit: (betAmount * selectedOdd - betAmount).toFixed(2),
+                total: (betAmount * selectedOdd).toFixed(2)
+            };
+
+            sendToTelegram(betDetails);
+            // Update balance (for demo purposes, subtract bet amount)
+            userBalance -= betAmount;
+            balanceDisplay.textContent = `الرصيد: $${userBalance.toFixed(2)}`;
+        });
+
+        function sendToTelegram(bet) {
+            const message = `
+لقد اختار اللاعب رهانًا:
+الفريق الأول: ${bet.team1}
+الفريق الثاني: ${bet.team2}
+الاحتمال: ${bet.odd}
+المبلغ: $${bet.amount}
+الربح المحتمل: $${bet.profit}
+المبلغ الكلي: $${bet.total}
+            `;
+
+            fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: message,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    showNotification();
+                    resetBetSlip();
+                } else {
+                    alert('فشل في إرسال الرهان إلى تليجرام');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('حدث خطأ أثناء الإرسال');
+            });
+        }
+
+        function showNotification() {
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        function resetBetSlip() {
+            betSlip.textContent = 'اختر الرهانات الخاصة بك';
+            betAmountInput.value = '';
+            potentialProfit.textContent = 'الربح المحتمل: $0';
+            totalAmount.textContent = 'المبلغ الكلي: $0';
+            selectedOdd = 0;
+        }
+
+        // Load data on page load
+        window.onload = loadData;
+    </script>
+</body>
+</html>
