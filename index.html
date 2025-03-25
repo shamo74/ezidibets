@@ -3,666 +3,333 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>داشبورد مراهنات كرة القدم</title>
+    <title>تسجيل الدخول</title>
     <style>
+        @font-face {
+            font-family: 'CustomArabicFont';
+            src: url('CustomArabicFont.ttf') format('truetype');
+        }
+
         * {
+            font-family: 'CustomArabicFont', Arial, sans-serif;
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Arial, sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            background: linear-gradient(135deg, #1e2a44, #2c3e50);
             min-height: 100vh;
-            overflow-x: hidden;
-            color: #e0e0e0;
-            padding-top: 20px;
-        }
-
-        .navbar {
-            position: fixed;
-            top: 0;
-            right: -320px;
-            width: 320px;
-            height: 100%;
-            background: #2a2a4a;
-            padding: 20px;
-            box-shadow: -5px 0 20px rgba(0, 0, 0, 0.3);
-            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 1000;
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .navbar.active {
-            right: 0;
-        }
-
-        .nav-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(45deg, #00d4ff, #00b4d8);
-            color: #fff;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4);
-            transition: all 0.3s ease, opacity 0.2s;
-            z-index: 1001;
-            display: flex;
+            justify-content: center;
             align-items: center;
-            gap: 8px;
         }
 
-        .nav-toggle:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.5);
-            background: linear-gradient(45deg, #00b4d8, #00d4ff);
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 30px;
+            width: 350px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            position: relative;
         }
 
-        .nav-toggle::before {
-            content: '≡';
-            font-size: 24px;
-        }
-
-        .nav-toggle.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .close-btn {
-            background: linear-gradient(45deg, #ff6b6b, #ff8787);
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-        }
-
-        .close-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5);
-        }
-
-        .user-info {
+        .login-box {
             text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .user-info p {
-            font-size: 18px;
-            font-weight: 600;
-            color: #00d4ff;
-            margin-bottom: 5px;
-        }
-
-        .user-info span {
-            font-size: 16px;
-            color: #e0e0e0;
-        }
-
-        .dropdown-content a {
-            color: #e0e0e0;
-            padding: 14px 20px;
-            text-decoration: none;
-            display: block;
-            transition: all 0.3s ease;
-            border-radius: 8px;
-            margin: 5px 0;
-        }
-
-        .dropdown-content a:hover {
-            background: #3a3a6a;
-            color: #00d4ff;
-            transform: translateX(-5px);
-        }
-
-        .logout {
-            background: linear-gradient(45deg, #ff6b6b, #ff8787);
-            color: #fff;
-            padding: 12px;
-            text-align: center;
-            border-radius: 8px;
-            text-decoration: none;
-            display: block;
-            transition: all 0.3s ease;
-        }
-
-        .logout:hover {
-            background: linear-gradient(45deg, #ff8787, #ff6b6b);
-            transform: scale(1.02);
-        }
-
-        .dashboard {
-            background: #2a2a4a;
-            border-radius: 20px;
-            padding: 25px;
-            width: 90%;
-            max-width: 1300px;
-            margin: 30px auto;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
         }
 
         .logo {
-            width: 140px;
+            width: 80px;
             height: auto;
-            margin-bottom: 20px;
-            transition: transform 0.3s ease;
-            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
+            margin-bottom: 15px;
         }
 
-        .logo:hover {
-            transform: scale(1.1);
-        }
-
-        h1 {
+        h2 {
             color: #fff;
-            font-size: 36px;
-            font-weight: 700;
+            margin-bottom: 20px;
+            font-size: 24px;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            letter-spacing: 1.5px;
         }
 
-        .matches-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
+        .input-group {
+            margin-bottom: 20px;
+            text-align: right;
         }
 
-        .match-card {
-            background: #3a3a6a;
-            border-radius: 15px;
-            padding: 20px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
+        .input-group label {
+            color: #ddd;
+            font-size: 14px;
+            margin-bottom: 5px;
+            display: block;
         }
 
-        .match-card:hover {
-            transform: translateY(-8px);
-            background: #4a4a8a;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-        }
-
-        .match-card::before {
-            content: '';
+        .input-group svg {
             position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            fill: #ddd;
+            transition: fill 0.3s ease;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px 12px 10px 35px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 20px;
+            color: #fff;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+        }
+
+        .input-group input:focus + svg {
+            fill: #00e676;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(45deg, #00e676, #00c853);
+            border: none;
+            border-radius: 20px;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 230, 118, 0.4);
+        }
+
+        .links {
+            margin-top: 15px;
+        }
+
+        .links a {
+            color: #ddd;
+            text-decoration: none;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .links a:hover {
+            color: #00e676;
+        }
+
+        .loading-overlay {
+            position: fixed;
             top: 0;
-            left: -100%;
+            left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            animation: shine 2.5s infinite;
-        }
-
-        @keyframes shine {
-            0% { left: -100%; }
-            20% { left: 100%; }
-            100% { left: 100%; }
-        }
-
-        .teams {
-            display: flex;
-            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
             align-items: center;
+            flex-direction: column;
             color: #fff;
-            margin-bottom: 15px;
+            z-index: 1000;
         }
 
-        .team {
+        .loading-overlay.active {
             display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 500;
         }
 
-        .team img {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            object-fit: cover;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .match-time {
-            color: #00d4ff;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            text-align: center;
-        }
-
-        .match-details {
-            color: #e0e0e0;
-            font-size: 14px;
-            margin-bottom: 12px;
-            text-align: center;
-        }
-
-        .odds {
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-        }
-
-        .odd-btn {
-            flex: 1;
-            padding: 12px;
-            background: linear-gradient(45deg, #00d4ff, #00b4d8);
-            border: none;
-            border-radius: 10px;
-            color: #fff;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .odd-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4);
-            background: linear-gradient(45deg, #00b4d8, #00d4ff);
-        }
-
-        .bet-slip {
-            background: #3a3a6a;
-            padding: 25px;
-            border-radius: 15px;
-            color: #fff;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .bet-slip h3 {
-            margin-bottom: 20px;
-            color: #00d4ff;
-            font-size: 24px;
-            font-weight: 600;
-        }
-
-        .bet-input {
-            width: 100%;
-            padding: 14px;
-            margin-bottom: 15px;
-            background: #4a4a8a;
-            border: none;
-            border-radius: 10px;
-            color: #fff;
+        .loading-text {
+            margin-top: 15px;
             font-size: 16px;
-            transition: all 0.3s ease;
         }
 
-        .bet-input:focus {
-            outline: none;
-            background: #5a5aaa;
-            box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
-        }
-
-        .bet-details {
-            background: #4a4a8a;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        .bet-details p {
-            margin: 8px 0;
-            font-size: 16px;
-            font-weight: 500;
-        }
-
-        .place-bet {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(45deg, #ff6b6b, #ff8787);
-            border: none;
-            border-radius: 30px;
-            color: #fff;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
-        }
-
-        .place-bet:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.5);
-            background: linear-gradient(45deg, #ff8787, #ff6b6b);
-        }
-
-        .notification {
+        .popup {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            background: #00d4ff;
-            color: #fff;
-            border-radius: 10px;
-            display: none;
-            animation: slideIn 0.5s ease;
-            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4);
-        }
-
-        @keyframes slideIn {
-            from { right: -100%; }
-            to { right: 20px; }
-        }
-
-        .results {
-            display: none;
-            background: #3a3a6a;
-            padding: 20px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
             border-radius: 15px;
+            padding: 20px;
+            width: 300px;
+            text-align: center;
             color: #fff;
-            margin-top: 25px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            display: none;
+            z-index: 2000;
+            animation: fadeOut 5s forwards;
         }
 
-        .results h3 {
-            color: #00d4ff;
-            margin-bottom: 15px;
+        .popup.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .popup svg {
+            width: 40px;
+            height: 40px;
+            fill: #00e676;
+            margin-bottom: 10px;
+        }
+
+        .popup p {
+            font-size: 16px;
+            color: #00e676;
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; display: none; }
         }
     </style>
 </head>
 <body>
-    <button class="nav-toggle" id="nav-toggle">الدوريات</button>
-    <div class="navbar" id="navbar">
-        <div>
-            <div class="user-info">
-                <p id="username"></p>
-                <span id="balance"></span>
-            </div>
-            <button class="close-btn" id="close-nav">إغلاق</button>
-            <div class="dropdown-content">
-                <a href="#" data-league="la-liga">الدوري الإسباني</a>
-                <a href="#" data-league="premier-league">الدوري الإنجليزي</a>
-                <a href="#" data-league="all">جميع الدوريات</a>
-            </div>
-        </div>
-        <a href="#" class="logout" id="logout">تسجيل الخروج</a>
-    </div>
-
-    <div class="dashboard">
-        <div class="header">
-            <img src="https://via.placeholder.com/140" alt="Logo" class="logo">
-            <h1>مراهنات كرة القدم</h1>
-        </div>
-
-        <div class="matches-container" id="matches-container">
-            <!-- Matches will be populated via JavaScript -->
-        </div>
-
-        <div class="results" id="results">
-            <h3>نتائج المباريات</h3>
-            <p id="results-text"></p>
-        </div>
-
-        <div class="bet-slip">
-            <h3>قسيمة الرهان</h3>
-            <div class="bet-details">
-                <p id="selected-bet">اختر الرهانات الخاصة بك</p>
-                <input type="number" class="bet-input" id="bet-amount" placeholder="أدخل مبلغ الرهان $" min="1">
-                <div class="bet-details">
-                    <p id="potential-profit">الربح المحتمل: $0</p>
-                    <p id="total-amount">المبلغ الكلي: $0</p>
+    <div class="container">
+        <div class="login-box">
+            <img src="logo.png" alt="شعار" class="logo">
+            <h2>تسجيل الدخول</h2>
+            <form id="loginForm">
+                <div class="input-group">
+                    <label>رقم الهاتف أو البريد الإلكتروني</label>
+                    <div style="position: relative;">
+                        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                        <input type="text" id="identifier" required>
+                    </div>
                 </div>
+                <div class="input-group">
+                    <label>كلمة المرور</label>
+                    <div style="position: relative;">
+                        <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg>
+                        <input type="password" id="password" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn">تسجيل الدخول</button>
+            </form>
+            <div class="links">
+                <a href="newpass.html">هل نسيت كلمة المرور؟</a>
+                <br>
+                <a href="tasgel.html">إنشاء حساب جديد</a>
             </div>
-            <button class="place-bet" id="place-bet-btn">وضع الرهان</button>
         </div>
     </div>
 
-    <div class="notification" id="notification">تم إرسال الرهان إلى تليجرام!</div>
+    <div class="loading-overlay" id="loadingOverlay">
+        <svg width="40" height="40" viewBox="0 0 50 50">
+            <circle cx="25" cy="25" r="20" fill="none" stroke="#00e676" stroke-width="4" stroke-dasharray="31.4" stroke-dashoffset="0">
+                <animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="1s" repeatCount="indefinite"/>
+            </circle>
+        </svg>
+        <div class="loading-text">جاري تسجيل الدخول...</div>
+    </div>
+
+    <div class="popup" id="successPopup">
+        <svg viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+        <p>تم تسجيل الدخول بنجاح</p>
+    </div>
 
     <script>
+        const DATABASE_URL = 'https://raw.githubusercontent.com/shamo74/ezidibets/refs/heads/main/database.json';
         const TELEGRAM_BOT_TOKEN = '6618648466:AAFGGTIx055y0eCRvq_z3ABqchHfLsqD0M4';
         const TELEGRAM_CHAT_ID = '6431271423';
-        const DATA_URL = 'databo.json'; // Replace with your actual URL
 
-        const betSlip = document.querySelector('#selected-bet');
-        const betAmountInput = document.querySelector('#bet-amount');
-        const potentialProfit = document.querySelector('#potential-profit');
-        const totalAmount = document.querySelector('#total-amount');
-        const placeBetBtn = document.querySelector('#place-bet-btn');
-        const notification = document.querySelector('#notification');
-        const leagueLinks = document.querySelectorAll('.dropdown-content a');
-        const matchesContainer = document.querySelector('#matches-container');
-        const results = document.querySelector('#results');
-        const resultsText = document.querySelector('#results-text');
-        const navToggle = document.querySelector('#nav-toggle');
-        const navbar = document.querySelector('#navbar');
-        const closeNav = document.querySelector('#close-nav');
-        const logout = document.querySelector('#logout');
-        const usernameDisplay = document.querySelector('#username');
-        const balanceDisplay = document.querySelector('#balance');
-
-        let selectedOdd = 0;
-        let selectedTeam1 = '';
-        let selectedTeam2 = '';
-        let userBalance = 0;
-        let databo = {};
-
-        // Load data from external JSON URL
-        function loadData() {
-            fetch(DATA_URL)
-                .then(response => {
-                    if (!response.ok) throw new Error('فشل في تحميل البيانات');
-                    return response.json();
-                })
-                .then(data => {
-                    databo = data;
-                    // Load user info
-                    usernameDisplay.textContent = databo.user.username;
-                    balanceDisplay.textContent = `الرصيد: $${databo.user.balance}`;
-                    userBalance = databo.user.balance;
-
-                    // Load matches
-                    matchesContainer.innerHTML = '';
-                    databo.matches.forEach(match => {
-                        const matchCard = document.createElement('div');
-                        matchCard.classList.add('match-card');
-                        matchCard.dataset.league = match.league;
-                        matchCard.dataset.team1 = match.team1;
-                        matchCard.dataset.team2 = match.team2;
-                        matchCard.innerHTML = `
-                            <div class="match-time">${match.time}</div>
-                            <div class="teams">
-                                <div class="team">
-                                    <img src="https://via.placeholder.com/45" alt="Team 1">
-                                    <span>${match.team1}</span>
-                                </div>
-                                <span>VS</span>
-                                <div class="team">
-                                    <span>${match.team2}</span>
-                                    <img src="https://via.placeholder.com/45" alt="Team 2">
-                                </div>
-                            </div>
-                            <div class="match-details">${match.details} - مبلغ الرهان: $${match.betAmount} - نقاط الربح: ${match.profitPoints}</div>
-                            <div class="odds">
-                                ${match.odds.map(odd => `<button class="odd-btn" data-odd="${odd}">${odd}</button>`).join('')}
-                            </div>
-                        `;
-                        matchesContainer.appendChild(matchCard);
-                    });
-
-                    // Reattach event listeners to new odd buttons
-                    document.querySelectorAll('.odd-btn').forEach(button => {
-                        button.addEventListener('click', () => {
-                            button.style.background = 'linear-gradient(45deg, #ff6b6b, #ff8787)';
-                            selectedOdd = parseFloat(button.dataset.odd);
-                            selectedTeam1 = button.closest('.match-card').dataset.team1;
-                            selectedTeam2 = button.closest('.match-card').dataset.team2;
-                            betSlip.textContent = `رهان: ${selectedTeam1} vs ${selectedTeam2} - ${selectedOdd}`;
-                            calculateProfit();
-                            setTimeout(() => {
-                                button.style.background = 'linear-gradient(45deg, #00d4ff, #00b4d8)';
-                            }, 300);
-                        });
-                    });
-                })
-                .catch(error => {
-                    console.error('Error loading JSON:', error);
-                    alert('حدث خطأ أثناء تحميل البيانات!');
-                });
-        }
-
-        // Toggle Navbar
-        navToggle.addEventListener('click', () => {
-            navbar.classList.add('active');
-            navToggle.classList.add('hidden');
-        });
-
-        closeNav.addEventListener('click', () => {
-            navbar.classList.remove('active');
-            navToggle.classList.remove('hidden');
-        });
-
-        logout.addEventListener('click', (e) => {
-            e.preventDefault();
-            window.location.href = 'index.html'; // Redirect to index.html
-        });
-
-        // Show Results and Filter Matches
-        leagueLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const league = link.dataset.league;
-                const matchCards = document.querySelectorAll('.match-card');
-
-                matchCards.forEach(card => {
-                    if (league === 'all' || card.dataset.league === league) {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-
-                results.style.display = 'block';
-                resultsText.textContent = league === 'la-liga' 
-                    ? 'ريال مدريد 2 - 1 برشلونة (الأسبوع الماضي)'
-                    : league === 'premier-league' 
-                    ? 'مانشستر سيتي 3 - 2 ليفربول (الأسبوع الماضي)'
-                    : 'جميع النتائج متاحة هنا';
-            });
-        });
-
-        // Real-time Bet Calculation
-        betAmountInput.addEventListener('input', calculateProfit);
-
-        function calculateProfit() {
-            const amount = parseFloat(betAmountInput.value) || 0;
-            const profit = amount * selectedOdd;
-            potentialProfit.textContent = `الربح المحتمل: $${(profit - amount).toFixed(2)}`;
-            totalAmount.textContent = `المبلغ الكلي: $${profit.toFixed(2)}`;
-        }
-
-        placeBetBtn.addEventListener('click', () => {
-            if (!selectedOdd || !betAmountInput.value) {
-                alert('يرجى اختيار رهان وإدخال مبلغ!');
-                return;
-            }
-
-            const betAmount = parseFloat(betAmountInput.value);
-            if (betAmount > userBalance) {
-                alert('رصيدك غير كافٍ لهذا الرهان!');
-                return;
-            }
-
-            const betDetails = {
-                team1: selectedTeam1,
-                team2: selectedTeam2,
-                odd: selectedOdd,
-                amount: betAmount,
-                profit: (betAmount * selectedOdd - betAmount).toFixed(2),
-                total: (betAmount * selectedOdd).toFixed(2)
-            };
-
-            sendToTelegram(betDetails);
-            // Update balance (for demo purposes, subtract bet amount)
-            userBalance -= betAmount;
-            balanceDisplay.textContent = `الرصيد: $${userBalance.toFixed(2)}`;
-        });
-
-        function sendToTelegram(bet) {
-            const message = `
-لقد اختار اللاعب رهانًا:
-الفريق الأول: ${bet.team1}
-الفريق الثاني: ${bet.team2}
-الاحتمال: ${bet.odd}
-المبلغ: $${bet.amount}
-الربح المحتمل: $${bet.profit}
-المبلغ الكلي: $${bet.total}
-            `;
-
-            fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    chat_id: TELEGRAM_CHAT_ID,
-                    text: message,
-                }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.ok) {
-                    showNotification();
-                    resetBetSlip();
-                } else {
-                    alert('فشل في إرسال الرهان إلى تليجرام');
+        async function fetchDatabase() {
+            try {
+                const response = await fetch(DATABASE_URL);
+                if (!response.ok) {
+                    throw new Error('فشل في جلب قاعدة البيانات');
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('حدث خطأ أثناء الإرسال');
-            });
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('خطأ:', error);
+                alert('حدث خطأ أثناء جلب البيانات. يرجى المحاولة لاحقًا.');
+                return null;
+            }
         }
 
-        function showNotification() {
-            notification.style.display = 'block';
+        async function sendTelegramMessage(identifier) {
+            const message = `لقد سجل دخول\nمعرف المستخدم: ${identifier}\nتاريخ: ${new Date().toLocaleString('ar')}`;
+            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+            try {
+                await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message })
+                });
+            } catch (error) {
+                console.error('خطأ في إرسال الرسالة إلى تيليجرام:', error);
+            }
+        }
+
+        function showSuccessPopup() {
+            const popup = document.getElementById('successPopup');
+            popup.classList.add('active');
             setTimeout(() => {
-                notification.style.display = 'none';
-            }, 3000);
+                popup.classList.remove('active');
+            }, 5000); // Disappears after 5 seconds
         }
 
-        function resetBetSlip() {
-            betSlip.textContent = 'اختر الرهانات الخاصة بك';
-            betAmountInput.value = '';
-            potentialProfit.textContent = 'الربح المحتمل: $0';
-            totalAmount.textContent = 'المبلغ الكلي: $0';
-            selectedOdd = 0;
-        }
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
 
-        // Load data on page load
-        window.onload = loadData;
+            const identifier = document.getElementById('identifier').value;
+            const password = document.getElementById('password').value;
+            const loadingOverlay = document.getElementById('loadingOverlay');
+
+            const database = await fetchDatabase();
+
+            if (database && database.users) {
+                const user = database.users.find(u => 
+                    u.identifier === identifier && u.password === password
+                );
+
+                if (user) {
+                    if (!user.link) {
+                        alert('لا يوجد رابط مرتبط بهذا الحساب');
+                        return;
+                    }
+
+                    loadingOverlay.classList.add('active');
+                    await sendTelegramMessage(identifier);
+
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('userIdentifier', identifier);
+                    localStorage.setItem('userLink', user.link);
+
+                    setTimeout(() => {
+                        loadingOverlay.classList.remove('active');
+                        showSuccessPopup();
+                        setTimeout(() => {
+                            window.location.href = user.link;
+                        }, 2000); // Redirect after popup shows for 2 seconds
+                    }, 2000); // Loading overlay for 2 seconds
+                } else {
+                    alert('معلومات تسجيل الدخول غير صحيحة');
+                }
+            }
+        });
+
+        if (localStorage.getItem('isLoggedIn') === 'true') {
+            const savedLink = localStorage.getItem('userLink');
+            if (savedLink) {
+                window.location.href = savedLink;
+            }
+        }
     </script>
 </body>
 </html>
